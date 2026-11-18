@@ -2,53 +2,37 @@
 [![rank](https://make.fun/badge/news-image-20261117/soedirman566-stack/news-image-20261117/rank.svg)](https://make.fun/bounty/news-image-20261117/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
 [![reward](https://make.fun/badge/news-image-20261117/soedirman566-stack/news-image-20261117/reward.svg)](https://make.fun/bounty/news-image-20261117?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
 
-# The World in One Picture — 17 November 2026
+# The World in One Picture — Tuesday, 17 November 2026
 
-An entry for make.fun's **news-image-20261117** competition: sum up the
-world news of Tuesday 17 November 2026 in a single image.
+An entry for the make.fun **news-image-20261117** bounty: the whole day's
+world news summed up in a single 1024×1024 front-page image.
 
-The image is a dark, editorial newspaper front page — a masthead, two
-photographs with headline bars, and a strip of one-line headlines —
-composed programmatically at 1024×1024.
+## The stories on the page
 
-## The day's stories it sums up
-
-1. **Crimea Bridge down** (hero photograph) — Ukraine's strike collapsed
-   a section of the Kerch Bridge linking Russia to Crimea, in what
-   Zelenskyy called "an unprecedented operation"; Russia retaliated
-   against Kyiv's Dnipro bridges.
-2. **Hormuz ablaze** (second photograph) — two tankers were struck in
-   the Strait of Hormuz as a third U.S. aircraft carrier, USS Theodore
-   Roosevelt, reached the Middle East; Iran also fired drones at a U.S.
-   radar site in Bahrain.
-3. **Trump lands in Manila** — opening an Asia tour that ends in China
-   with Xi–Putin three-way talks.
-4. **Vulcan rocket fails** — a ULA Vulcan failure in flight destroyed
+1. **Crimea Bridge Down** — Ukraine's strike collapsed a span of the Kerch
+   Bridge; Russia answered with strikes on Kyiv's Dnipro bridges.
+2. **Hormuz Ablaze** — Tankers were struck in the Strait of Hormuz as a
+   third U.S. aircraft carrier reached the Gulf.
+3. **Vulcan Fails** — A ULA Vulcan rocket broke up in flight, destroying
    40 Amazon Leo satellites.
-5. **Nvidia reports** — its first earnings since Jensen Huang's exit,
-   with tech stocks falling ahead of the numbers.
-6. Footer line — JPMorgan Chase blamed a software bug, not a
-   cyberattack, for a major banking outage.
+4. **Trump Lands in Manila** — The ASEAN summit opened his Asia tour,
+   which ends in China with Xi–Putin three-way talks.
+5. **Nvidia Reports** — Its first earnings since Jensen Huang's exit.
+6. **JPMorgan: It Was a Bug** — The bank blamed a software bug, not a
+   cyberattack, for its major outage.
 
 ## How it works
 
-- `build_image.py` — a Python/Pillow program that composes the front
-  page from the two photographs in `assets/` (cover-cropped into their
-  panels) plus the masthead, headlines and sublines set in DejaVu Serif
-  Bold / Sans. It writes the result to `entry.png`. Because a
-  photographic PNG at 1024×1024 would exceed the contest's 1 MiB limit,
-  the composed picture is saved as JPEG bytes (quality ~88) inside the
-  file named `entry.png` — the contest detects the format from the
-  magic bytes, so this is explicitly allowed. Final file: 1024×1024,
-  ~200 KB.
-- `main.py` — the competition entrypoint. The harness runs it offline
-  and expects the image at `/output/entry.png`, identical on every run,
-  so it simply copies the committed `entry.png` next to it into place
-  (standard library only, deterministic). It fails loudly if the source
-  image is missing or the copy is incomplete.
-- `assets/` — the two source photographs used by `build_image.py`.
-
-To rebuild the image: `python3 build_image.py`
+- `main.py` — the entrypoint. It copies the bundled `entry.png` to
+  `/output/entry.png` (creating `/output` if needed) and verifies the
+  copy. Standard library only; deterministic; no network.
+- `build_image.py` — the compositor that produced `entry.png`. It lays
+  out the four news photos in `assets/` as a dark editorial front page
+  with Pillow (serif headlines, gold rule, wrapped sublines) and saves
+  the result as JPEG bytes under the `entry.png` name, stepping the
+  quality down until it fits the 1 MiB limit.
+- `assets/` — the four AI-generated, text-free news photos used on the
+  page (bridge, tanker, rocket, Manila arrival).
 
 ## License
 

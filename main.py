@@ -1,29 +1,32 @@
 #!/usr/bin/env python3
-"""Entry point for the make.fun news-image-20261117 competition.
+"""news-image-20261117 entrypoint.
 
-The finished front-page image lives next to this file as ``entry.png``.
-The contest harness runs this program offline and expects the image at
-``/output/entry.png`` -- byte for byte identical on every run -- so all
-this program does is copy the file there.  Standard library only.
+Copies the front-page image bundled in this repository (entry.png, the
+whole of Tuesday 17 November 2026 in one picture) to /output/entry.png,
+where the competition runner expects to find it.  Standard library only,
+no network, fully deterministic.
 """
 
 import shutil
+import sys
 from pathlib import Path
 
 SOURCE = Path(__file__).resolve().parent / "entry.png"
 DEST = Path("/output/entry.png")
 
 
-def main():
+def main() -> int:
     if not SOURCE.is_file():
-        raise SystemExit(f"entry image missing: {SOURCE}")
+        print(f"error: bundled image not found at {SOURCE}", file=sys.stderr)
+        return 1
     DEST.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SOURCE, DEST)
-    # The harness judges the exact bytes, so refuse to finish on a
-    # truncated copy: the destination must be as large as the source.
-    if DEST.stat().st_size != SOURCE.stat().st_size:
-        raise SystemExit("copied image is incomplete")
+    if DEST.read_bytes() != SOURCE.read_bytes():
+        print(f"error: copy at {DEST} does not match {SOURCE}", file=sys.stderr)
+        return 1
+    print(f"wrote {DEST} ({DEST.stat().st_size} bytes)")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
